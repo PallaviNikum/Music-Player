@@ -1,0 +1,807 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VYBE | Premium Music</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #090b10;
+  --panel: #12151e;
+  --muted: #9da4b4;
+  --lime: #c7ff4f;
+  --line: #292d39;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #fff;
+  font-family: Inter, Arial, sans-serif;
+}
+
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.app {
+  display: grid;
+  grid-template-columns: 225px 1fr;
+  min-height: 100vh;
+  padding-bottom: 115px;
+}
+
+.sidebar {
+  padding: 27px 17px;
+  background: #0d0f15;
+  border-right: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.logo {
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin: 0 0 38px 8px;
+}
+
+.logo span { color: var(--lime); }
+
+.label {
+  color: #727a8d;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin: 26px 10px 12px;
+}
+
+.nav button {
+  width: 100%;
+  text-align: left;
+  padding: 13px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  margin: 3px 0;
+}
+
+.nav button:hover,
+.nav button.active {
+  color: white;
+  background: #20242f;
+}
+
+.nav button.active { border-left: 3px solid var(--lime); }
+
+.main { padding: 26px clamp(16px, 3vw, 40px); min-width: 0; }
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 28px;
+}
+
+.search {
+  width: min(420px, 65%);
+  padding: 13px 17px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: white;
+  border-radius: 30px;
+  outline: none;
+}
+
+.search:focus { border-color: var(--lime); }
+
+.user {
+  background: #28253e;
+  color: white;
+  padding: 10px 13px;
+  border-radius: 30px;
+  font-size: 12px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 265px;
+  padding: 35px;
+  border-radius: 23px;
+  background: linear-gradient(115deg, #282147, #482b58 55%, #17212a);
+  margin-bottom: 35px;
+}
+
+.hero::after {
+  content: "♫";
+  position: absolute;
+  right: 7%;
+  top: -55px;
+  font-size: 280px;
+  color: #c7ff4f;
+  opacity: .12;
+  transform: rotate(-15deg);
+}
+
+.eyebrow {
+  color: var(--lime);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.hero h1 {
+  font-size: clamp(35px, 5vw, 57px);
+  letter-spacing: -3px;
+  line-height: 1.05;
+  margin: 15px 0;
+  max-width: 450px;
+}
+
+.hero h1 span { color: var(--lime); }
+
+.hero p {
+  color: #d0cada;
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 370px;
+}
+
+.primary {
+  border: 0;
+  border-radius: 30px;
+  background: var(--lime);
+  color: #111;
+  padding: 13px 20px;
+  font-weight: 800;
+  margin-top: 10px;
+}
+
+.section { margin: 35px 0; }
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.section-head h2 { font-size: 21px; margin: 0; }
+.section-head p { color: var(--muted); font-size: 12px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+
+.chip {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 9px 15px;
+  border-radius: 25px;
+}
+
+.chip.active, .chip:hover {
+  background: var(--lime);
+  color: #111;
+  border-color: var(--lime);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid #ffffff08;
+  border-radius: 15px;
+  padding: 11px;
+  cursor: pointer;
+  min-width: 0;
+  transition: .2s;
+}
+
+.card:hover { background: #202430; transform: translateY(-3px); }
+
+.card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 11px;
+}
+
+.card h3 {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 12px 0 6px;
+}
+
+.card p { font-size: 11px; color: var(--muted); margin: 0; }
+
+.song-list { width: 100%; border-collapse: collapse; }
+
+.song-list th {
+  text-align: left;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  padding: 12px 8px;
+}
+
+.song-list td {
+  padding: 10px 8px;
+  border-top: 1px solid #ffffff0b;
+  color: #cbd0dc;
+  font-size: 12px;
+}
+
+.song-list tr:hover { background: #ffffff08; }
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 140px;
+}
+
+.track img {
+  width: 43px;
+  height: 43px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.track strong { display: block; color: white; margin-bottom: 5px; }
+.track small { color: var(--muted); }
+
+.action {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.action.liked { color: var(--lime); }
+
+.empty { padding: 25px; color: var(--muted); text-align: center; }
+.hide { display: none !important; }
+
+.player {
+  position: fixed;
+  z-index: 10;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 20px;
+  align-items: center;
+  padding: 14px 24px;
+  min-height: 95px;
+  background: #11141ded;
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--line);
+}
+
+.now { display: flex; align-items: center; gap: 11px; min-width: 0; }
+
+.now img {
+  width: 49px;
+  height: 49px;
+  border-radius: 9px;
+  object-fit: cover;
+}
+
+.now strong {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.now small { color: var(--muted); font-size: 11px; }
+
+.controls { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
+.control-row { display: flex; align-items: center; gap: 20px; }
+
+.control {
+  background: transparent;
+  color: #c6cad4;
+  border: 0;
+  font-size: 17px;
+}
+
+.control.on { color: var(--lime); }
+
+.play {
+  border: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--lime);
+  color: #10130a;
+  font-size: 17px;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+input[type="range"] { accent-color: var(--lime); cursor: pointer; }
+#seek { width: 100%; }
+
+.volume { display: flex; justify-content: flex-end; align-items: center; gap: 9px; }
+#volume { width: 85px; }
+
+@media(max-width:1050px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .player { grid-template-columns: 1fr 1fr; }
+  .volume { display: none; }
+}
+
+@media(max-width:650px) {
+  .app { display: block; }
+  .sidebar { display: none; }
+  .main { padding: 17px 13px; }
+  .hero { padding: 23px; min-height: 250px; }
+  .hero h1 { font-size: 39px; }
+  .hero::after { right: -40px; font-size: 200px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .card { padding: 8px; }
+  .player { padding: 10px; grid-template-columns: 1fr auto; gap: 8px; min-height: 78px; }
+  .now img { width: 42px; height: 42px; }
+  .now strong { max-width: 120px; }
+  .control-row { gap: 12px; }
+  .secondary { display: none; }
+  .progress { position: fixed; left: 0; bottom: 75px; width: 100%; gap: 0; }
+  .progress span { display: none; }
+  #seek { height: 3px; }
+  .song-list th:nth-child(2), .song-list td:nth-child(2) { display: none; }
+  .song-list td { padding: 8px 3px; }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<aside class="sidebar">
+  <div class="logo">VYBE<span>.</span></div>
+  <p class="label">DISCOVER</p>
+  <nav class="nav">
+    <button class="active" data-view="home">⌂ &nbsp; Home</button>
+    <button data-view="liked">♡ &nbsp; Liked Songs</button>
+    <button data-view="chill">☾ &nbsp; Chill & Focus</button>
+    <button data-view="energy">ϟ &nbsp; Energy Boost</button>
+    <button data-view="all">♫ &nbsp; All Music</button>
+  </nav>
+  <p class="label">YOUR SPACE</p>
+  <div style="background:#1b1b29;padding:17px;border-radius:14px">
+    <div style="font-size:25px;color:#c7ff4f">✦</div>
+    <h4>Find your frequency.</h4>
+    <p style="font-size:12px;color:#9da4b4;line-height:1.6">Your mood. Your music. Your world.</p>
+    <button class="primary" id="mixBtn">▶ Play a mix</button>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <input class="search" id="search" placeholder="⌕  Search songs, artists, albums...">
+    <div class="user">● &nbsp; Music Explorer</div>
+  </header>
+
+  <section class="hero">
+    <div style="position:relative;z-index:1">
+      <div class="eyebrow">✦ YOUR DAILY SOUNDTRACK</div>
+      <h1>Feel every<br><span>frequency.</span></h1>
+      <p>Discover your next favourite track. From slow mornings to late-night energy, find the sound that feels like you.</p>
+      <button class="primary" id="heroPlay">▶ &nbsp; Play your mix</button>
+    </div>
+  </section>
+
+  <section class="section" id="moods">
+    <div class="section-head">
+      <div><h2>Made for your mood</h2><p>Pick a vibe. Let the music take over.</p></div>
+    </div>
+    <div class="chips">
+      <button class="chip active" data-filter="all">All vibes</button>
+      <button class="chip" data-filter="chill">Chill</button>
+      <button class="chip" data-filter="energy">Energy</button>
+      <button class="chip" data-filter="indie">Indie</button>
+      <button class="chip" data-filter="focus">Focus</button>
+    </div>
+    <div class="grid" id="cards"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div><h2 id="listTitle">Trending right now</h2><p>Fresh sounds for your next repeat.</p></div>
+      <button class="action" id="playAll">PLAY ALL ↗</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="song-list">
+        <thead><tr><th>TITLE</th><th>ALBUM</th><th>TIME</th><th></th></tr></thead>
+        <tbody id="songs"></tbody>
+      </table>
+    </div>
+    <div class="empty hide" id="empty">No songs found. Try another search.</div>
+  </section>
+</main>
+</div>
+
+<footer class="player">
+  <div class="now">
+    <img id="currentCover" src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=150&q=80" alt="Album cover">
+    <div><strong id="currentTitle">Choose a song</strong><small id="currentArtist">VYBE Music</small></div>
+    <button class="action" id="likeCurrent" title="Like">♡</button>
+  </div>
+
+  <div class="controls">
+    <div class="control-row">
+      <button class="control secondary" id="shuffle" title="Shuffle">⤨</button>
+      <button class="control" id="previous" title="Previous">|◀</button>
+      <button class="play" id="toggle" title="Play">▶</button>
+      <button class="control" id="next" title="Next">▶|</button>
+      <button class="control secondary" id="repeat" title="Repeat">↻</button>
+    </div>
+    <div class="progress">
+      <span id="elapsed">0:00</span>
+      <input type="range" id="seek" min="0" max="100" value="0">
+      <span id="total">0:00</span>
+    </div>
+  </div>
+
+  <div class="volume">
+    <span>◖))</span>
+    <input type="range" id="volume" min="0" max="1" step=".01" value=".75">
+  </div>
+</footer>
+
+<audio id="audio"></audio>
+
+<script>
+const songs = [
+  {title:"Midnight City Lights",artist:"The Velvet Echo",album:"After Hours",genre:"chill",cover:"photo-1519608487953-e999c86e7455",audio:1},
+  {title:"Golden Hour",artist:"June Wilder",album:"Soft Focus",genre:"chill",cover:"photo-1470252649378-9c29740c9fa8",audio:2},
+  {title:"Neon Dreams",artist:"Nova Bloom",album:"Electric Soul",genre:"energy",cover:"photo-1516280440614-37939bbacd81",audio:3},
+  {title:"Ocean Between Us",artist:"Mira Sol",album:"Blue Notes",genre:"chill",cover:"photo-1500375592092-40eb2168fd21",audio:4},
+  {title:"Run It Back",artist:"Kairo",album:"Fast Lane",genre:"energy",cover:"photo-1470225620780-dba8ba36b745",audio:5},
+  {title:"Little Things",artist:"Paper Planes",album:"Bedroom Tapes",genre:"indie",cover:"photo-1493225457124-a3eb161ffa5f",audio:6},
+  {title:"Cloud Nine",artist:"Sunday Service",album:"Daydreams",genre:"focus",cover:"photo-1464822759023-fed622ff2c3b",audio:7},
+  {title:"Velvet Skies",artist:"Luna Grey",album:"Soft Focus",genre:"chill",cover:"photo-1490730141103-6cac27aaab94",audio:8},
+  {title:"Afterglow",artist:"Atlas North",album:"Electric Soul",genre:"indie",cover:"photo-1519608487953-e999c86e7455",audio:9},
+  {title:"No Sleep Club",artist:"The Night Shift",album:"Fast Lane",genre:"energy",cover:"photo-1516280440614-37939bbacd81",audio:10},
+  {title:"Rain on the Window",artist:"Arlo June",album:"Blue Notes",genre:"focus",cover:"photo-1518837695005-2083093ee35b",audio:11},
+  {title:"Somewhere New",artist:"Wildflower Club",album:"Bedroom Tapes",genre:"indie",cover:"photo-1500530855697-b586d89ba3ee",audio:12}
+];
+
+const audio = document.getElementById("audio");
+const $ = id => document.getElementById(id);
+const coverURL = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=400&q=80`;
+const audioURL = n => `https://www.soundhelix.com/examples/mp3/SoundHelix-Song-${n}.mp3`;
+
+let current = -1;
+let playing = false;
+let shuffle = false;
+let repeat = false;
+let filter = "all";
+let view = "home";
+let query = "";
+let liked = new Set(JSON.parse(localStorage.getItem("vybe-liked") || "[]"));
+
+function timeText(value) {
+  if (!Number.isFinite(value)) return "0:00";
+  return Math.floor(value / 60) + ":" + String(Math.floor(value % 60)).padStart(2,"0");
+}
+
+function filteredSongs() {
+  let result = songs;
+
+  if (view === "liked") result = result.filter(s => liked.has(s.title));
+  if (view === "chill" || view === "energy")
+    result = result.filter(s => s.genre === view);
+
+  if (filter !== "all" && view === "home")
+    result = result.filter(s => s.genre === filter);
+
+  if (query) {
+    const q = query.toLowerCase();
+    result = result.filter(s =>
+      `${s.title} ${s.artist} ${s.album} ${s.genre}`.toLowerCase().includes(q)
+    );
+  }
+  return result;
+}
+
+const playlists = [
+  {name:"Late Night Feels",desc:"For your quiet hours.",genre:"chill",song:0},
+  {name:"Main Character",desc:"Big energy, bigger dreams.",genre:"energy",song:4},
+  {name:"Indie Afterglow",desc:"Discover your next obsession.",genre:"indie",song:5},
+  {name:"Deep Focus",desc:"Tune out the noise.",genre:"focus",song:6},
+  {name:"Golden State of Mind",desc:"A softer place to land.",genre:"chill",song:1}
+];
+
+function renderCards() {
+  const data = playlists.filter(p =>
+    (filter === "all" || p.genre === filter) &&
+    (!query || (p.name + p.desc + p.genre).toLowerCase().includes(query.toLowerCase()))
+  );
+
+  $("cards").innerHTML = data.map(p => `
+    <article class="card" data-song="${p.song}">
+      <img src="${coverURL(songs[p.song].cover)}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p>${p.desc}</p>
+    </article>
+  `).join("");
+
+  document.querySelectorAll("[data-song]").forEach(card => {
+    card.addEventListener("click", () => playSong(Number(card.dataset.song)));
+  });
+}
+
+function renderSongs() {
+  const list = filteredSongs();
+
+  $("listTitle").textContent =
+    view === "liked" ? "Liked Songs" :
+    view === "chill" ? "Chill & Focus" :
+    view === "energy" ? "Energy Boost" :
+    query ? "Search results" : "Trending right now";
+
+  $("empty").classList.toggle("hide", list.length > 0);
+
+  $("songs").innerHTML = list.map(s => {
+    const index = songs.indexOf(s);
+    const isCurrent = index === current;
+
+    return `
+      <tr>
+        <td>
+          <div class="track">
+            <img src="${coverURL(s.cover)}" alt="">
+            <div>
+              <strong>${s.title}</strong>
+              <small>${s.artist}</small>
+            </div>
+          </div>
+        </td>
+        <td>${s.album}</td>
+        <td>${s.duration || "--:--"}</td>
+        <td>
+          <button class="action ${liked.has(s.title) ? "liked" : ""}"
+            data-like="${index}" aria-label="Like ${s.title}">
+            ${liked.has(s.title) ? "♥" : "♡"}
+          </button>
+          <button class="action" data-play="${index}" aria-label="Play ${s.title}">
+            ${isCurrent && playing ? "Ⅱ" : "▶"}
+          </button>
+        </td>
+      </tr>`;
+  }).join("");
+
+  document.querySelectorAll("[data-play]").forEach(button => {
+    button.addEventListener("click", () => playSong(Number(button.dataset.play)));
+  });
+
+  document.querySelectorAll("[data-like]").forEach(button => {
+    button.addEventListener("click", () => toggleLike(Number(button.dataset.like)));
+  });
+}
+
+function render() {
+  renderCards();
+  renderSongs();
+
+  document.querySelectorAll("[data-filter]").forEach(button => {
+    button.classList.toggle("active", button.dataset.filter === filter);
+  });
+
+  document.querySelectorAll("[data-view]").forEach(button => {
+    button.classList.toggle("active", button.dataset.view === view);
+  });
+
+  $("moods").classList.toggle("hide",
+    ["liked","chill","energy","all"].includes(view) && view !== "all" ||
+    view === "liked" || view === "chill" || view === "energy" || !!query
+  );
+}
+
+function updatePlayer() {
+  const song = songs[current];
+
+  if (song) {
+    $("currentCover").src = coverURL(song.cover);
+    $("currentTitle").textContent = song.title;
+    $("currentArtist").textContent = song.artist;
+    $("likeCurrent").textContent = liked.has(song.title) ? "♥" : "♡";
+    $("likeCurrent").classList.toggle("liked", liked.has(song.title));
+  }
+
+  $("toggle").textContent = playing ? "Ⅱ" : "▶";
+  renderSongs();
+}
+
+function playSong(index) {
+  if (index < 0 || index >= songs.length) return;
+
+  current = index;
+  audio.src = audioURL(songs[index].audio);
+  audio.volume = Number($("volume").value);
+
+  audio.play().then(() => {
+    playing = true;
+    updatePlayer();
+  }).catch(() => {
+    playing = false;
+    updatePlayer();
+    alert("Music could not start. Please check your internet connection and try again.");
+  });
+
+  updatePlayer();
+}
+
+function togglePlay() {
+  if (current === -1) {
+    playSong(0);
+  } else if (audio.paused) {
+    audio.play().then(() => {
+      playing = true;
+      updatePlayer();
+    }).catch(() => alert("Could not play audio. Check your connection."));
+  } else {
+    audio.pause();
+    playing = false;
+    updatePlayer();
+  }
+}
+
+function nextSong() {
+  let index;
+
+  if (shuffle) {
+    index = Math.floor(Math.random() * songs.length);
+    if (songs.length > 1 && index === current) index = (index + 1) % songs.length;
+  } else {
+    index = (current + 1) % songs.length;
+  }
+
+  playSong(index);
+}
+
+function toggleLike(index) {
+  const title = songs[index].title;
+
+  if (liked.has(title)) liked.delete(title);
+  else liked.add(title);
+
+  localStorage.setItem("vybe-liked", JSON.stringify([...liked]));
+  renderSongs();
+  updatePlayer();
+}
+
+$("toggle").addEventListener("click", togglePlay);
+$("heroPlay").addEventListener("click", () => playSong(0));
+$("mixBtn").addEventListener("click", () => playSong(Math.floor(Math.random() * songs.length)));
+$("next").addEventListener("click", nextSong);
+
+$("previous").addEventListener("click", () => {
+  if (audio.currentTime > 3) audio.currentTime = 0;
+  else playSong((current - 1 + songs.length) % songs.length);
+});
+
+$("shuffle").addEventListener("click", () => {
+  shuffle = !shuffle;
+  $("shuffle").classList.toggle("on", shuffle);
+});
+
+$("repeat").addEventListener("click", () => {
+  repeat = !repeat;
+  $("repeat").classList.toggle("on", repeat);
+});
+
+$("likeCurrent").addEventListener("click", () => {
+  if (current >= 0) toggleLike(current);
+});
+
+$("volume").addEventListener("input", () => {
+  audio.volume = Number($("volume").value);
+});
+
+$("seek").addEventListener("input", () => {
+  if (audio.duration) {
+    audio.currentTime = Number($("seek").value) / 100 * audio.duration;
+  }
+});
+
+audio.addEventListener("timeupdate", () => {
+  if (!audio.duration) return;
+
+  $("seek").value = audio.currentTime / audio.duration * 100;
+  $("elapsed").textContent = timeText(audio.currentTime);
+  $("total").textContent = timeText(audio.duration);
+});
+
+audio.addEventListener("play", () => { playing = true; updatePlayer(); });
+audio.addEventListener("pause", () => { playing = false; updatePlayer(); });
+
+audio.addEventListener("ended", () => {
+  if (repeat) {
+    audio.currentTime = 0;
+    audio.play();
+  } else {
+    nextSong();
+  }
+});
+
+$("search").addEventListener("input", event => {
+  query = event.target.value.trim();
+  view = "home";
+  render();
+});
+
+document.querySelectorAll("[data-filter]").forEach(button => {
+  button.addEventListener("click", () => {
+    filter = button.dataset.filter;
+    view = "home";
+    render();
+  });
+});
+
+document.querySelectorAll("[data-view]").forEach(button => {
+  button.addEventListener("click", () => {
+    view = button.dataset.view;
+    filter = "all";
+    query = "";
+    $("search").value = "";
+    render();
+  });
+});
+
+$("playAll").addEventListener("click", () => {
+  const list = filteredSongs();
+  if (list.length) playSong(songs.indexOf(list[0]));
+});
+
+document.addEventListener("keydown", event => {
+  if (event.target.tagName === "INPUT") return;
+
+  if (event.code === "Space") {
+    event.preventDefault();
+    togglePlay();
+  }
+
+  if (event.code === "ArrowRight" && audio.duration) {
+    audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
+  }
+
+  if (event.code === "ArrowLeft" && audio.duration) {
+    audio.currentTime = Math.max(0, audio.currentTime - 5);
+  }
+});
+
+render();
+updatePlayer();
+</script>
+</body>
+</html>
